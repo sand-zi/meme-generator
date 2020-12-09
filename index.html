@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/main.css">
+    <title>Mister Canvas</title>
+</head>
+
+<body onload="init()">
+    <section class="menu">
+        <label for="cont-color">Conture:</label>
+        <input type="color" id="cont-color" name="cont-color" value="#ff0000" onchange="setContureColor(value)">
+        <label for="fill-color">Fill:</label>
+        <input type="color" id="fill-color" name="fill-color" value="#ff0000" onchange="setBgcColor(value)">
+
+        <label for="shapes"> Shape:</label>
+        <select name="shapes" id="shapes" onchange="setShape(value)">
+            <option value="line">Line</option>
+            <option value="triangle" selected>Triangle</option>
+            <option value="rect">Rect</option>
+            <option value="arc">Arc</option>
+        </select>
+        <button>Download</button>
+        <button onclick="clearCanvas()">Clear</button>
+
+
+    </section>
+    <div class="canvas-container">
+        <canvas id="my-canvas" height="450" width="450" onmousedown="setMouseState(true)" onmouseup="setMouseState(false)" onmousemove="draw(event)"></canvas>
+    </div>
+    <script src="js/canvas.js"></script>
+</body>
+
+</html>
