@@ -6,6 +6,8 @@ var gCtx;
 var gContureColor = 'black';
 var gBgcColor = 'white';
 var gChosenImgId
+var gSelectedLine = 0
+var gIsSelectionOn = false
 
 function init() {
     gCanvas = document.getElementById('my-canvas');
@@ -37,8 +39,13 @@ function renderCanvas() {
     img.src = `img/${meme.selectedImgId}.jpg`;
     img.onload = () => {
         gCtx.drawImage(img, 0, 0, gCanvas.width, gCanvas.height) //img,x,y,xend,yend
-        meme.lines.forEach(line => {
+        meme.lines.forEach((line, idx) => {
+
             drawText(line.txt, line.size, line.align, line.x, line.y)
+            if (idx === meme.selectedLineIdx && gIsSelectionOn) {
+                drawRect(line.x - 10, line.y - line.size, ((line.size / 2) * line.txt.split("").length), (line.size + 10))
+                renderInput(line.txt, idx)
+            }
         }
         )
     }
@@ -54,8 +61,22 @@ function drawText(text, fontSize, align, x, y) {
     gCtx.strokeText(text, x, y);
 }
 
+function drawRect(x, y, width, height) {
+    gCtx.beginPath()
+    gCtx.strokeStyle = 'black'
+    gCtx.rect(x, y, width, height) // x,y,widht,height
+    gCtx.stroke()
 
+}
+
+function renderInput(text, id){
+    var elInput = document.querySelector('.user-input');
+    elInput.value=text;
+    elInput.setAttribute('data-lineId',`${id}`)
+
+}
 function onUpdateMemeText(el) {
+    console.log(el)
     updateMemeText(el.value);
     renderCanvas();
 }
@@ -83,5 +104,12 @@ function onAlign(el) {
 
 function onAddLine() {
     addLine();
+    renderCanvas();
+}
+
+function onSwitchLine() {
+    gIsSelectionOn = true
+    updateSelectedLine(gSelectedLine);
+    gSelectedLine++;
     renderCanvas();
 }

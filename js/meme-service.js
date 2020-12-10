@@ -25,9 +25,9 @@ function createMeme() {
             {
                 txt: 'I am working',
                 size: 30,
-                align: 'center',
+                align: 'left',
                 color: 'red',
-                x: 250,
+                x: 200,
                 y: 50,
             }
         ]
@@ -44,19 +44,6 @@ function updateMemeText(text) {
     gMeme.lines[gMeme.selectedLineIdx].txt = text;
 }
 
-function updateAlign(align) {
-    switch (align) {
-        case 'right':
-            gMeme.lines[gMeme.selectedLineIdx].x = 350;
-            break;
-        case 'center':
-            gMeme.lines[gMeme.selectedLineIdx].x = 250;
-            break;
-        case 'left':
-            gMeme.lines[gMeme.selectedLineIdx].x = 100;
-            break;
-    }
-}
 
 function changeMemeFontSize(diff) {
     if (gMeme.lines[gMeme.selectedLineIdx].size > 62) {
@@ -68,6 +55,29 @@ function changeMemeFontSize(diff) {
 
     gMeme.lines[gMeme.selectedLineIdx].size += diff
 }
+function moveMemeText(diff, maxHeight) {
+    if (gMeme.lines[gMeme.selectedLineIdx].y > 0.95 * maxHeight) {
+        gMeme.lines[gMeme.selectedLineIdx].y = 0.95 * maxHeight
+    }
+    if (gMeme.lines[gMeme.selectedLineIdx].y < 45) {
+        gMeme.lines[gMeme.selectedLineIdx].y = 50
+    }
+    gMeme.lines[gMeme.selectedLineIdx].y += diff
+}
+
+function updateAlign(align) {
+    switch (align) {
+        case 'right':
+            gMeme.lines[gMeme.selectedLineIdx].x = 250;
+            break;
+        case 'center':
+            gMeme.lines[gMeme.selectedLineIdx].x = 150;
+            break;
+        case 'left':
+            gMeme.lines[gMeme.selectedLineIdx].x = 30;
+            break;
+    }
+}
 
 function addLine() {
     var newLine = createNewLine()
@@ -78,9 +88,9 @@ function createNewLine() {
     return {
         txt: 'Enter Your text Here',
         size: 30,
-        align: 'center',
+        align: 'left',
         color: 'red',
-        x: 250,
+        x: 200,
         y: getVertPosition(),
     }
 }
@@ -94,16 +104,12 @@ function getVertPosition() {
         return 250
     }
 }
-function moveMemeText(diff, maxHeight) {
-    if (gMeme.lines[gMeme.selectedLineIdx].y > 0.95 * maxHeight) {
-        gMeme.lines[gMeme.selectedLineIdx].y = 0.95 * maxHeight
-    }
-    if (gMeme.lines[gMeme.selectedLineIdx].y < 45) {
-        gMeme.lines[gMeme.selectedLineIdx].y = 50
-    }
-    gMeme.lines[gMeme.selectedLineIdx].y += diff
-}
 
+function updateSelectedLine(selectedLineId){
+//  add limitation with find index
+    gMeme.selectedLineIdx=selectedLineId
+
+}
 
 // Gallery
 

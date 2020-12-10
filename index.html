@@ -25,15 +25,15 @@
             <canvas id="my-canvas" height="500" width="500"></canvas>
         </div>
         <section class="menu-container flex">
-            <label for="name">Your message:</label>
-            <input type="text" id="name" name="name" onkeyup="onUpdateMemeText(this)">
+            <label for="user-input">Your message:</label>
+            <input type="text" id="name" class="user-input" onkeyup="onUpdateMemeText(this)">
 
             <div class="outer-line-editor-container">
                 <button class="edit-btn move-text" onclick="onMoveLines(event)"><img class="edit-img"
                         src="icons/up-and-down-opposite-double-arrows-side-by-side.png"></button>
                 <button class="edit-btn" onclick="onAddLine()"><img class="edit-img"
                         src="icons/add.png"></button>
-                <button class="edit-btn switch-lines" onclick="onSwitchLinesLines()"><img class="edit-img"
+                <button class="edit-btn switch-lines" onclick="onSwitchLine()"><img class="edit-img"
                         src="icons/up-and-down-opposite-double-arrows-side-by-side.png"></button>
             </div>
             <div class="inner-line-editor-container">
