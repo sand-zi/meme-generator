@@ -7,7 +7,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/main.css">
-    <title>Mister Canvas</title>
+    <title>Meme Generator</title>
 </head>
 
 <body onload="init()">
@@ -18,23 +18,25 @@
             <li><a class="flex align-center justify-center" href="#">About</a></li>
         </ul>
     </header>
+    <section class="search-container main-layout">
+        
+    </section>
     <section class="gallery-container main-layout"></section>
     <section class="editor-container hidden main-layout align-center justify-center">
 
-        <div class="canvas-container flex justify-center">
-            <canvas id="my-canvas" height="500" width="500"></canvas>
+        <div class="canvas-container flex justify-center ">
+            <canvas id="my-canvas" height="500" width="500" onmousedown="setMouseState(true)" onmouseup="setMouseState(false)" onmousemove="canvasClicked(event)"></canvas>
         </div>
-        <section class="menu-container flex">
-            <label for="user-input">Your message:</label>
-            <input type="text" id="name" class="user-input" onkeyup="onUpdateMemeText(this)">
-
+        <section class="menu-container flex space-around">
             <div class="outer-line-editor-container">
+                <input type="text" id="name" class="user-input" data-lineid="0" onkeyup="onUpdateMemeText(this)">
                 <button class="edit-btn move-text" onclick="onMoveLines(event)"><img class="edit-img"
                         src="icons/up-and-down-opposite-double-arrows-side-by-side.png"></button>
-                <button class="edit-btn" onclick="onAddLine()"><img class="edit-img"
-                        src="icons/add.png"></button>
+                <button class="edit-btn" onclick="onAddLine()"><img class="edit-img" src="icons/add.png"></button>
                 <button class="edit-btn switch-lines" onclick="onSwitchLine()"><img class="edit-img"
                         src="icons/up-and-down-opposite-double-arrows-side-by-side.png"></button>
+                <button class="edit-btn delete-line" onclick="onDeleteLine()"><img class="edit-img"
+                        src="icons/trash.png"></button>
             </div>
             <div class="inner-line-editor-container">
                 <button class="edit-btn" onclick="onChangeFontSize(+1)"><img class="edit-img"
@@ -48,22 +50,40 @@
                 <button class="edit-btn" name="right" onclick="onAlign(this)"><img class="edit-img"
                         src="icons/align-to-right.png"></button>
 
-                <label for="cont-color">Conture:</label>
-                <input type="color" id="cont-color" name="cont-color" value="#ff0000" onchange="setContureColor(value)">
-                <label for="fill-color">Fill:</label>
-                <input type="color" id="fill-color" name="fill-color" value="#ff0000" onchange="setBgcColor(value)">
+                <button class="edit-btn color-container"><img class="edit-img" src="icons/text-stroke.png"><input
+                        type="color" class="color-editor" id="cont-color" name="cont-color" value="#ff0000"
+                        onchange="onSetStrokeColor(value)"></button>
+                <button class="edit-btn color-container"><img class="edit-img"
+                        src="icons/paint-board-and-brush.png"><input type="color" class="color-editor" id="fill-color"
+                        name="fill-color" value="#ff0000" onchange="onSetTextColor(value)"></button>
+                <select class="font-editor" id="font" onchange="onSetFont(value)">
+                    <option value="Impact" selected>Impact</option>
+                    <option value="Arial">Arial</option>
+                    <option value="Monaco">Monaco</option>
+                </select>
             </div>
 
+            <section class="operation-btns">
+                <form action="" method="POST" enctype="multipart/form-data" onsubmit="uploadImg(this, event)">
+                    <input name="img" id="imgData" type="hidden" />
+                    <button class="btn-sharing" type="submit">Publish</button>
+                    <button class="btn-sharing download" onclick="onDownloadImg()">Download as jpeg</button>
+                    <a href="#" class="link-sharing download" onclick="downloadImg(this)" download="my-img.jpg">Download as jpeg</a>
+                    <div class="share-container"></div>
+                </form>
 
-
+            </section>
         </section>
+
     </section>
     <footer class="main-footer main-layout flex justify-center align-center">
         <span class="logo">My MemeGen</span>
         <small>All rights reserved 2020</small>
     </footer>
-    <script src="js/meme-controller.js"></script>
+    <script src="js/util-service.js"></script>
     <script src="js/meme-service.js"></script>
+    <script src="js/meme-controller.js"></script>
+
 </body>
 
 </html>
