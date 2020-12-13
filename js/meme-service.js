@@ -1,6 +1,6 @@
 'use strict'
-var KEY_MEME = 'MEME'
-var gKeywords = { 'happy': 12, 'funny puk': 1 }
+const KEY_MEME = 'MEME'
+const gKeywords = { 'happy': 12, 'funny puk': 1 }
 var gImgs = [{ id: 1, url: 'img/1.jpg', keywords: ['man', 'president', 'mood'] },
 { id: 2, url: 'img/2.jpg', keywords: ['cute', 'dogs', 'babies'] },
 { id: 3, url: 'img/3.jpg', keywords: ['cute', 'dogs', 'babies'] },
@@ -15,66 +15,60 @@ var gImgs = [{ id: 1, url: 'img/1.jpg', keywords: ['man', 'president', 'mood'] }
 
 var gMeme
 
-function createMeme() {
-    var meme = loadFromStorage(KEY_MEME)
+function _createMeme() {
+    gMeme = {
+        selectedImgId: 5,
+        selectedLineIdx: 0,
 
-    if (!meme || meme.lines.length === 0) {
-        meme = {
-            selectedImgId: 5,
-            selectedLineIdx: 0,
-
-            lines: [
-                {
-                    txt: 'Change me',
-                    size: 30,
-                    align: 'left',
-                    stroke: 'black',
-                    color: 'white',
-                    font: 'Impact',
-                    x: 200,
-                    y: 50,
-                }
-            ]
-        }
+        lines: [
+            {
+                txt: 'Change me',
+                size: 30,
+                align: 'left',
+                stroke: 'black',
+                color: 'white',
+                font: 'Impact',
+                x: 200,
+                y: 50,
+            }
+        ]
     }
-    gMeme = meme
-    saveMemeToLocalStorage();
+    // saveMemeToLocalStorage();
 }
 
-function getMemeByImgId(imgId) {
-    createMeme()
+
+function updateMemeWithID(imgId) {
+    _createMeme()
     gMeme.selectedImgId = imgId;
-    var meme = gMeme;
-    return meme;
+    // return gMeme;
 }
 
-function getMeme(){
+function getMeme() {
     return gMeme
 }
- 
-function updateLineCoords(clickedLineIdx, newX, newY){
-    gMeme.selectedLineIdx=clickedLineIdx;
-    console.log()
-    gMeme.lines[gMeme.selectedLineIdx].x+=newX;
-    gMeme.lines[gMeme.selectedLineIdx].y+=newY;
-    saveMemeToLocalStorage()
+
+function updateLineCoords(clickedLineIdx, newX, newY) {
+    gMeme.selectedLineIdx = clickedLineIdx;
+    gMeme.lines[gMeme.selectedLineIdx].x += newX;
+    gMeme.lines[gMeme.selectedLineIdx].y += newY;
+    // saveMemeToLocalStorage()
 }
 
 function updateMemeText(text) {
     gMeme.lines[gMeme.selectedLineIdx].txt = text;
-    saveMemeToLocalStorage()
+    // saveMemeToLocalStorage()
 }
 
 function changeMemeFontSize(diff) {
     if (gMeme.lines[gMeme.selectedLineIdx].size > 62) {
         gMeme.lines[gMeme.selectedLineIdx].size = 62
     }
-    if (gMeme.lines[gMeme.selectedLineIdx].size < 12) {
+    else if (gMeme.lines[gMeme.selectedLineIdx].size < 12) {
         gMeme.lines[gMeme.selectedLineIdx].size = 12
     }
 
     gMeme.lines[gMeme.selectedLineIdx].size += diff
-    saveMemeToLocalStorage()
+    // saveMemeToLocalStorage()
 }
 
 function moveMemeText(diff, maxHeight) {
@@ -85,22 +79,23 @@ function moveMemeText(diff, maxHeight) {
         gMeme.lines[gMeme.selectedLineIdx].y = 50
     }
     gMeme.lines[gMeme.selectedLineIdx].y += diff
-    saveMemeToLocalStorage()
+    // saveMemeToLocalStorage()
 }
 
-function updateAlign(align) {
+function updateAlign(align, width) {
+   
     switch (align) {
         case 'right':
-            gMeme.lines[gMeme.selectedLineIdx].x = 250;
-            saveMemeToLocalStorage()
+            gMeme.lines[gMeme.selectedLineIdx].x = width/1.5;
+            // saveMemeToLocalStorage()
             break;
         case 'center':
-            gMeme.lines[gMeme.selectedLineIdx].x = 150;
-            saveMemeToLocalStorage()
+            gMeme.lines[gMeme.selectedLineIdx].x = width/3;
+            // saveMemeToLocalStorage()
             break;
         case 'left':
-            gMeme.lines[gMeme.selectedLineIdx].x = 30;
-            saveMemeToLocalStorage()
+            gMeme.lines[gMeme.selectedLineIdx].x = width/6;
+            // saveMemeToLocalStorage()
             break;
     }
 }
@@ -108,7 +103,7 @@ function updateAlign(align) {
 function addLine() {
     var newLine = createNewLine()
     gMeme.lines.push(newLine)
-    saveMemeToLocalStorage()
+    // saveMemeToLocalStorage()
 };
 
 function createNewLine() {
@@ -125,21 +120,20 @@ function createNewLine() {
 }
 
 function getVertPosition() {
-    if (gMeme.lines.length === 0) {
+    if (!gMeme.lines.length) {
         return 50
     }
 
-    if (gMeme.lines.length === 1) {
+    else if (gMeme.lines.length === 1) {
         return 420
     }
-
-    if (gMeme.lines.length > 1) {
+    else {
         return 250
     }
 }
 
 function updateSelectedLine() {
-    if (gMeme.lines.length === 1 || gMeme.lines.length === 0) {
+    if (gMeme.lines.length === 1 || !gMeme.lines.length) {
         gMeme.selectedLineIdx = 0
         return
     }
@@ -148,30 +142,33 @@ function updateSelectedLine() {
     } else gMeme.selectedLineIdx++
 
 
-    saveMemeToLocalStorage()
+    // saveMemeToLocalStorage()
 }
 
 function deleteLine() {
     gMeme.lines.splice(gMeme.selectedLineIdx, 1)
-    gMeme.selectedLineIdx = (gMeme.lines.length === 0) ? 0 : gMeme.lines.length - 1
-    saveMemeToLocalStorage()
+    gMeme.selectedLineIdx = (!gMeme.lines.length) ? 0 : gMeme.lines.length - 1
+    // saveMemeToLocalStorage()
 }
 
 function setLineStroke(stroke) {
-    gMeme.lines.map(line => line.stroke = stroke)
-    saveMemeToLocalStorage()
+    gMeme.lines[gMeme.selectedLineIdx].stroke = stroke;
+    // saveMemeToLocalStorage()
 }
 
 function setTextColorFill(color) {
-    gMeme.lines.map(line => line.color = color)
-    saveMemeToLocalStorage()
+    gMeme.lines[gMeme.selectedLineIdx].color = color;
+    // saveMemeToLocalStorage()
 }
 
 function setFont(font) {
     gMeme.lines.map(line => line.font = font)
-    saveMemeToLocalStorage()
+    // saveMemeToLocalStorage()
 }
 
+function removegMeme() {
+    localStorage.clear()
+}
 
 function saveMemeToLocalStorage() {
     saveToStorage(KEY_MEME, gMeme);

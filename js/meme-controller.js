@@ -1,10 +1,9 @@
 'use strict'
 
-
 var gCanvas;
 var gCtx;
-var gContureColor = 'black';
-var gBgcColor = 'white';
+// var gContureColor = 'black';
+// var gBgcColor = 'white';
 var gChosenImgId
 var isDownLoadOn = false
 var gIsMouseDown = false
@@ -20,7 +19,7 @@ function renderGallery() {
     var images = getImagesForDisplay();
     var strHtmls = images.map(function (img) {
         return `
-            <img class="img-top" src=${img.url} onclick="onOpenCanvas(${img.id})">
+            <img class="img-top shadow-drop-2-center" src=${img.url} onclick="onOpenCanvas(${img.id})">
         `
     })
     document.querySelector('.gallery-container').innerHTML = strHtmls.join('')
@@ -29,16 +28,23 @@ function renderGallery() {
 function onOpenCanvas(imgIdx) {
     gChosenImgId = +imgIdx;
     document.querySelector('.gallery-container').classList.add('hidden')
-    document.querySelector('.editor-container').classList.remove('hidden')
-    document.querySelector('.editor-container').classList.add('flex')
+    document.querySelector('.editor-container').style.display = 'flex'
+    updateMemeWithID(gChosenImgId);
     renderCanvas();
 }
 
+function onLoadGallery() {
+    document.querySelector('.gallery-container').classList.remove('hidden')
+    document.querySelector('.editor-container').style.display = 'none'
+    removegMeme()
+    renderGallery()
+}
 //  Canvas
 function renderCanvas() {
-    var meme = getMemeByImgId(gChosenImgId);
+    var meme = getMeme();
     var img = new Image();
     img.src = `img/${meme.selectedImgId}.jpg`;
+
     img.onload = () => {
         gCtx.drawImage(img, 0, 0, gCanvas.width, gCanvas.height) //img,x,y,xend,yend
         meme.lines.forEach((line, idx) => {
@@ -49,11 +55,9 @@ function renderCanvas() {
                 if (!isDownLoadOn) { drawRect(line.x, line.y - line.size, (line.size + 10), line.txt) }
                 renderInput(line.txt, idx)
             }
-
         }
         )
     }
-
 }
 
 
@@ -75,7 +79,8 @@ function drawRect(x, y, height, text) {
     gCtx.stroke();
 }
 
-function canvasClicked(ev) {
+function onCanvasClicked(ev) {
+    if (!gIsMouseDown) return;
     var meme = getMeme();
     var { offsetX, offsetY } = ev;
     var { movementX, movementY } = ev;
@@ -84,13 +89,13 @@ function canvasClicked(ev) {
             && offsetY >= line.y - line.size && offsetY < line.y + 10
     })
 
-    if (clickedLineIdx!==-1 && gIsMouseDown) {
+    if (clickedLineIdx !== -1) {
         updateLineCoords(clickedLineIdx, movementX, movementY)
         renderCanvas();
-    } else return
+    } 
 }
 
-function setMouseState(state) {
+function onSetMouseState(state) {
     gIsMouseDown = state
 }
 
@@ -118,8 +123,8 @@ function onMoveLines(ev) {
 }
 
 function onAlign(el) {
-    
-    updateAlign(el.name);
+
+    updateAlign(el.name, gCanvas.width);
     renderCanvas();
 }
 
@@ -169,7 +174,7 @@ function downloadImg() {
     var imgContent = gCanvas.toDataURL('image/jpeg');
     elLink.href = imgContent;
     elLink.click()
-    isDownLoadOn=false
+    isDownLoadOn = false
 }
 
 function uploadImg(elForm, ev) {
@@ -187,7 +192,7 @@ function uploadImg(elForm, ev) {
         }
 
         doUploadImg(elForm, onSuccess);
-    }, 3000)
+    }, 1000)
 
 }
 
@@ -205,3 +210,17 @@ function doUploadImg(elForm, onSuccess) {
             console.error(err)
         })
 }
+
+
+window.addEventListener('resize', function () {
+    let windowWidth = this.innerWidth;
+    let canvasResize;
+    if (windowWidth >=1000 ) canvasResize = 500;
+    else if (windowWidth > 860 && windowWidth <1000 ) canvasResize = 450;
+    else if (windowWidth > 700 && windowWidth <860 ) canvasResize = 400;
+    else if (windowWidth > 500 && windowWidth <700 ) canvasResize = 300;
+    else canvasResize = 250;
+    gCanvas.style.width = canvasResize + 'px';
+    gCanvas.style.height = canvasResize + 'px';
+    renderCanvas();
+})
